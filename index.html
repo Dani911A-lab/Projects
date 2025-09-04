@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TASKDC — Google Tasks Clone</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <header class="brand">
+        <h1>DcTask</h1>
+      </header>
+
+      <div class="lists">
+        <div class="lists-header">
+          <h2>Listas</h2>
+          <button id="add-list-btn" title="Nueva lista">+</button>
+        </div>
+        <ul id="list-container" class="list-container"></ul>
+
+        <!-- Contenedor de tareas archivadas (el botón se generará desde JS) -->
+        <div class="archived-container">
+          <ul id="archived-tasks"></ul>
+        </div>
+      </div>
+
+      <footer class="sidebar-footer">
+        <small>Desarrollado por Daniel Carandana</small>
+      </footer>
+    </aside>
+
+    <main class="main">
+      <div class="main-header">
+        <input id="task-input" type="text" placeholder="Agregar tarea..." />
+        <button id="add-task-btn">Agregar</button>
+      </div>
+
+      <section class="tasks-area">
+        <div class="tasks-header">
+          <h2 id="current-list-title">Selecciona una lista</h2>
+          <div class="tasks-controls">
+            <button id="clear-completed">Borrar completadas</button>
+          </div>
+        </div>
+
+        <ul id="tasks" class="tasks"></ul>
+
+        <div id="empty-state" class="empty-state">
+          <img id="empty-image" src="img/newproject.png" alt="Nueva lista" />
+          <span class="empty-message">Empecemos un nuevo proyecto ✨</span>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Template de lista -->
+  <template id="list-item-tpl">
+    <li class="list-item">
+      <button class="list-select" type="button"></button> <!-- aquí irá el emoji -->
+      <span class="list-name"></span>
+      <div class="list-actions">
+        <button class="rename-list" title="Renombrar">✎</button>
+        <button class="delete-list" title="Eliminar">🗑</button>
+      </div>
+    </li>
+  </template>
+
+  <!-- Template de tarea -->
+  <template id="task-item-tpl">
+    <li class="task-item" draggable="true">
+      <label class="checkbox">
+        <input type="checkbox" class="task-checkbox" />
+        <span class="checkmark"></span>
+      </label>
+      <div class="task-content" contenteditable="false" spellcheck="false"></div>
+      <div class="task-actions">
+        <button class="edit-task" title="Editar">✎</button>
+        <button class="delete-task" title="Eliminar">🗑</button>
+      </div>
+    </li>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>

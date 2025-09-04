@@ -1,0 +1,403 @@
+:root{
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --muted: #6b7280;
+  --accent: #1a73e8;
+  --success: #16a34a;
+  --danger: #ef4444;
+  --radius: 8px;
+  --shadow: 0 4px 12px rgba(255, 255, 255, 0.06);
+  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-sm: 12px;
+  --font-md: 13px;
+  --font-lg: 14px;
+}
+
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body{
+  margin:0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(180deg,#fbfbfb 0%, #ffffff 100%);
+  color:#111827;
+  font-size: var(--font-md);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+.app {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:220px;
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:14px;
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+}
+
+.brand h1{
+  margin:0;
+  font-size:16px;
+  letter-spacing:0.2px;
+}
+
+.lists{
+  margin-top:10px;
+  flex:1 1 auto;
+  overflow:auto;
+  position: relative; /* importante para que emoji picker se posicione correctamente */
+}
+
+.lists-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:6px;
+  margin-bottom:6px;
+}
+
+#add-list-btn{
+  background:var(--accent);
+  color:white;
+  border:none;
+  height:28px;
+  width:28px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:16px;
+}
+
+.list-container{
+  list-style:none;
+  padding:0;
+  margin:0;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  position: relative;
+}
+
+.list-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:6px;
+  border-radius:6px;
+  cursor:pointer;
+  transition:background .12s, transform .08s;
+  font-size: var(--font-sm);
+  position: relative; /* para que emoji picker se posicione correctamente */
+}
+
+.list-item:hover{ background:#f3f4f6; }
+
+.list-item.active{
+  background:linear-gradient(90deg, rgba(217, 223, 232, 0.355), rgba(26,115,232,0.03));
+  box-shadow: inset 0 0 0 1px rgba(26,115,232,0.06);
+}
+
+/* ---------- CORRECCIÓN EMOJI ---------- */
+.list-select{
+  pointer-events: auto; /* ¡ahora sí recibe clicks! */
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  background: none;
+  border: none;
+  z-index: 10; /* aseguramos que esté por encima del fondo */
+}
+
+.list-name{ flex:1; font-size: var(--font-sm); color:#111827; }
+
+.list-actions button{
+  background:transparent;
+  border:none;
+  cursor:pointer;
+  font-size: var(--font-sm);
+}
+
+/* MAIN */
+.main{
+  flex:1 1 auto;
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:14px;
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+}
+
+.main-header{
+  display:flex;
+  gap:6px;
+}
+
+#task-input{
+  flex:1;
+  padding:8px 10px;
+  border-radius:6px;
+  border:1px solid #e6e9ef;
+  font-size: var(--font-sm);
+}
+
+#add-task-btn{
+  padding:8px 10px;
+  border-radius:6px;
+  background:var(--accent);
+  border:none;
+  color:white;
+  cursor:pointer;
+  font-weight:600;
+  font-size: var(--font-sm);
+}
+
+.tasks-area{
+  margin-top:12px;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+
+.tasks-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:6px;
+}
+
+.tasks{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:6px; overflow:auto; }
+
+.task-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px;
+  border-radius:6px;
+  border:1px solid #e4e9fa;
+  background:linear-gradient(180deg,#fff 0%, #fafcff 100%);
+  box-shadow: 0 2px 4px rgba(15, 21, 48, 0.03);
+  font-size: var(--font-sm);
+}
+
+.checkbox{ display:flex; align-items:center; }
+.checkbox input{ width:16px; height:16px; }
+
+.task-content{
+  flex:1;
+  font-size: var(--font-sm);
+  outline:none;
+  min-height:16px;
+}
+
+.task-content[contenteditable="true"]{
+  border-bottom:1px dashed #cbd5e1;
+  padding-bottom:2px;
+}
+
+.task-content.completed{
+  text-decoration:line-through;
+  color:var(--muted);
+  opacity:0.8;
+}
+
+.task-actions button{
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  margin-left:4px;
+  font-size: var(--font-sm);
+}
+
+/* empty state */
+.empty-state{
+  margin-top:20px;
+  color:var(--muted);
+  text-align:center;
+  display:none;
+  font-size: var(--font-sm);
+}
+
+.subtasks {
+  list-style: none;
+  margin: 6px 0 0 22px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.subtask-item {
+  background: #fafafa;
+  border: 1px solid #eee;
+  padding:4px 6px;
+  font-size: var(--font-sm);
+}
+.subtask-btn {
+  margin-right: 4px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.task-item.completed {
+  background-color: rgba(127, 255, 212, 0.138); /* verde agua */
+}
+
+.archived-container {
+  margin-top: 10px;
+  padding-top: 0;
+  position: relative;
+}
+
+.archived-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #e6e9ef;
+}
+
+.archived-container h3 {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+#archived-tasks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+#archived-tasks .list-item {
+  padding: 4px 6px;
+  font-size: 12px;
+  background: #f3f4f6;
+  border-radius: 6px;
+  cursor: default;
+}
+
+/* Botón Tareas Archivadas */
+.archived-btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, rgba(255, 254, 247, 0.537), rgba(255, 255, 255, 0.024));
+  border: 1px solid rgba(2, 8, 6, 0.2);
+  cursor: pointer;
+  font-size: var(--font-sm);
+  color: #1077ff;
+  margin-top: 10px;
+  transition: all 0.2s ease;
+  position: relative; /* asegurar que picker aparezca sobre este */
+  z-index: 5;
+}
+
+.archived-btn:hover {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+  transform: translateY(-1px);
+}
+
+.archived-btn i {
+  font-size: 14px;
+  color: #111;
+  margin-right: 6px;
+}
+
+.archived-btn .archived-count {
+  background-color: #000000f0;
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 0 5px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
+
+#empty-state {
+  margin-top: 20px;
+  text-align: center;
+  display: none;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+#empty-state img {
+  max-width: 200px;
+  opacity: 0.9;
+  display: block;
+  margin: 0 auto 8px auto;
+}
+
+#empty-state .empty-message {
+  margin-top: 4px;
+  font-size: 14px;
+  color: #6b7280;
+  display: block;
+}
+
+/* ---------- Emoji Picker Cuadrado ---------- */
+.emoji-picker {
+  position: absolute;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 columnas exactas */
+  grid-auto-rows: 40px;                  /* altura de cada fila igual al ancho aproximado */
+  gap: 6px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  z-index: 9999;
+  width: 220px;                          /* ancho fijo */
+  height: 220px;                         /* altura igual al ancho para que sea cuadrado */
+  overflow-y: auto;                       /* si hay más emojis, scroll */
+}
+
+.emoji-picker span {
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.emoji-picker span:hover {
+  background: #f0f0f0;
+  transform: scale(1.2);
+}
+
+
+
+
+/* responsive */
+@media (max-width:900px){
+  .app{ padding:10px; flex-direction:column; }
+  .sidebar{ width:100%; order:2 }
+  .main{ order:1 }
+}
