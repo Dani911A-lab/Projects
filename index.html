@@ -11,7 +11,7 @@
   <div class="app">
     <aside class="sidebar">
       <header class="brand">
-        <h1>DcTask</h1>
+        <img src="LOGO5.png" alt="Logo" class="logo">
       </header>
 
       <div class="lists">
@@ -70,7 +70,7 @@
 
   <!-- Template de tarea -->
   <template id="task-item-tpl">
-    <li class="task-item" draggable="true">
+    <li class="task-item" draggable="true" data-task-id="">
       <label class="checkbox">
         <input type="checkbox" class="task-checkbox" />
         <span class="checkmark"></span>
@@ -83,6 +83,11 @@
     </li>
   </template>
 
+  <!-- Contenedor global del Emoji Picker -->
+  <div id="emoji-picker-container" class="emoji-picker"></div>
+
+  <!-- Script principal -->
+   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
