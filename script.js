@@ -38,7 +38,6 @@ function findList(id) {
   return state.lists.find(l => l.id === id);
 }
 
-/* ---------- Emoji Picker ---------- */
 const emojiCategories = {
   "Oficina": ["👨‍💼","👩‍💼","🧑‍💼","👥","🔒","⭐","🚨","🏢","💼","📁","📂","🗂️","📊","📈","📉","📝","✒️","🧾","📚","📌","📎"],
   "Agrícola": ["🌱","🌿","🌾","🌻","🍌","🍎","🍐","🍇","🍒","🥦","🌽","🌳","🌴","🐄","🐖","🐓","🐑","💧","🛠️","🏚️"],
@@ -179,7 +178,6 @@ function renderTasks() {
 
   let tasksToRender = [];
   let title = 'Selecciona una lista';
-
   const isArchived = state.viewingArchived;
 
   if (isArchived) {
@@ -215,6 +213,11 @@ function renderTasks() {
     const node = buildTaskNode(task, findList(task.listId) || {tasks: []}, false);
     tasksEl.appendChild(node);
   });
+
+  // ✅ Activar drag & drop suave aquí
+  if (!isArchived) {
+    enableDragAndDrop();
+  }
 }
 
 function buildTaskNode(task, list, isSubtask) {
@@ -246,7 +249,7 @@ function buildTaskNode(task, list, isSubtask) {
       const listRef = findList(task.listId) || list;
 
       if (task.done && !state.archived.some(t => t.id === task.id)) {
-        state.archived.unshift({...task, listId: listRef.id});
+        state.archived.unshift({ ...task, listId: listRef.id });
         listRef.tasks = listRef.tasks.filter(t => t.id !== task.id);
       } else if (!task.done) {
         const archivedIndex = state.archived.findIndex(t => t.id === task.id);
@@ -392,8 +395,23 @@ clearCompletedBtn.addEventListener('click', () => {
   render();
 });
 
+/* ---------- Drag & Drop con SortableJS ---------- */
+function enableDragAndDrop() {
+  new Sortable(tasksEl, {
+    animation: 150,
+    ghostClass: 'dragging',
+    onEnd: function (evt) {
+      const list = findList(state.currentListId);
+      if (!list) return;
+
+      const [movedTask] = list.tasks.splice(evt.oldIndex, 1);
+      list.tasks.splice(evt.newIndex, 0, movedTask);
+
+      saveState();
+    }
+  });
+}
+
 /* ---------- Inicializar ---------- */
 loadState();
 render();
-
-
