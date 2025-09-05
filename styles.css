@@ -51,6 +51,12 @@ body{
   letter-spacing:0.2px;
 }
 
+.logo {
+  width: 80px;   /* ajusta al tamaño que quieras */
+  height: auto;
+  display: block;
+}
+
 .lists{
   margin-top:10px;
   flex:1 1 auto;
@@ -406,6 +412,12 @@ body{
 
 
 
+.dragging {
+  opacity: 0;
+}
+
+
+
 
 /* responsive */
 @media (max-width:900px){
@@ -413,4 +425,3 @@ body{
   .sidebar{ width:100%; order:2 }
   .main{ order:1 }
 }
-
