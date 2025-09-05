@@ -39,7 +39,13 @@ function findList(id) {
 }
 
 /* ---------- Emoji Picker ---------- */
-const popularEmojis = ["👨‍💼","👮","🔒","📌","🚨","⭐","🪙","💵","📂","💼","✒️","🧾","📈","⚖️","✈️","📚","👥","🗓️","⛽","🛢️","🛠️","📦","🍌","🛠️","🏚️","🏢","🏨","🏦","💧","🚰","💡","🌱"];
+const emojiCategories = {
+  "Oficina": ["👨‍💼","👩‍💼","🧑‍💼","👥","🔒","⭐","🚨","🏢","💼","📁","📂","🗂️","📊","📈","📉","📝","✒️","🧾","📚","📌","📎"],
+  "Agrícola": ["🌱","🌿","🌾","🌻","🍌","🍎","🍐","🍇","🍒","🥦","🌽","🌳","🌴","🐄","🐖","🐓","🐑","💧","🛠️","🏚️"],
+  "Finanzas": ["🏚️","💰","💵","💳","💸","🪙","📦","⚖️","🧮"],
+  "Logística": ["🚛","🚜","✈️","⛽","🛢️","💡"]
+};
+
 let activePicker = null;
 
 function showEmojiPicker(btn, list) {
@@ -48,38 +54,38 @@ function showEmojiPicker(btn, list) {
   const picker = document.createElement("div");
   picker.className = "emoji-picker";
 
-  popularEmojis.forEach(emoji => {
-    const span = document.createElement("span");
-    span.textContent = emoji;
-    span.style.cursor = "pointer";
-    span.style.fontSize = "18px";
-    span.style.margin = "3px";
-    span.addEventListener("click", (e) => {
-      e.stopPropagation();
-      list.emoji = emoji;
-      saveState();
-      render();
-      picker.remove();
-      activePicker = null;
+  for (const [category, emojis] of Object.entries(emojiCategories)) {
+    const title = document.createElement("div");
+    title.textContent = category;
+    title.className = "category-title";
+    picker.appendChild(title);
+
+    const grid = document.createElement("div");
+    grid.className = "emoji-grid";
+
+    emojis.forEach(emoji => {
+      const span = document.createElement("span");
+      span.textContent = emoji;
+      span.addEventListener("click", (e) => {
+        e.stopPropagation();
+        list.emoji = emoji;
+        saveState();
+        render();
+        picker.remove();
+        activePicker = null;
+      });
+      grid.appendChild(span);
     });
-    picker.appendChild(span);
-  });
+
+    picker.appendChild(grid);
+  }
 
   document.body.appendChild(picker);
   activePicker = picker;
 
   const rect = btn.getBoundingClientRect();
-  picker.style.position = "absolute";
   picker.style.top = rect.bottom + window.scrollY + "px";
   picker.style.left = rect.left + window.scrollX + "px";
-  picker.style.display = "flex";
-  picker.style.flexWrap = "wrap";
-  picker.style.background = "#fff";
-  picker.style.border = "1px solid #ccc";
-  picker.style.padding = "6px";
-  picker.style.borderRadius = "6px";
-  picker.style.boxShadow = "0 2px 8px rgba(0,0,0,0.15)";
-  picker.style.zIndex = 9999;
 
   setTimeout(() => {
     window.addEventListener("click", closePickerOnClickOutside);
@@ -389,4 +395,5 @@ clearCompletedBtn.addEventListener('click', () => {
 /* ---------- Inicializar ---------- */
 loadState();
 render();
+
 
