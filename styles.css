@@ -20,6 +20,7 @@ body{
   padding: 0;
   height: 100%;
   width: 100%;
+  overflow: hidden;
   background: linear-gradient(180deg,#fbfbfb 0%, #ffffff 100%);
   color:#111827;
   font-size: var(--font-md);
@@ -32,6 +33,7 @@ body{
   flex-direction: row;
   height: 100%;
   width: 100%;
+  height: 100vh;
 }
 
 /* SIDEBAR */
@@ -43,6 +45,7 @@ body{
   box-shadow:var(--shadow);
   display:flex;
   flex-direction:column;
+  height: 100%;
 }
 
 .brand h1{
@@ -52,26 +55,142 @@ body{
 }
 
 .logo {
-  width: 80px;   /* ajusta al tamaño que quieras */
+  width: 60px;
   height: auto;
   display: block;
 }
 
-.lists{
-  margin-top:10px;
-  flex:1 1 auto;
-  overflow:auto;
-  position: relative; /* importante para que emoji picker se posicione correctamente */
+/* Header listas con fondo difuminado */
+.lists-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.89); /* 🔹 fondo difuminado */
+  margin-bottom: 6px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 6px 0;
+  backdrop-filter: blur(4px); /* efecto difuminado */
+  border-bottom: 1px solid #e6e9ef; /* opcional, separación */
 }
 
-.lists-header{
+.list-item .list-select {
+  z-index: 1; /* 🔥 fuerza que el emoji quede detrás del header al hacer scroll */
+}
+
+.lists-wrapper {
+  flex:1;
+  overflow:hidden;
   display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:6px;
-  margin-bottom:6px;
+  flex-direction:column;
 }
 
+.lists {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Scroll oculto por defecto */
+.lists::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lists::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.3);
+  border-radius: 10px;
+  visibility: hidden;
+  transition: visibility 0.3s;
+}
+
+.lists.scrolling::-webkit-scrollbar-thumb {
+  visibility: visible;
+}
+
+.lists::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Anclar botón de tareas archivadas abajo con fondo difuminado */
+.archived-btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(2, 8, 6, 0.2);
+  cursor: pointer;
+  font-size: var(--font-sm);
+  color: #1077ff;
+  margin-top: 10px;
+  transition: all 0.2s ease;
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+}
+
+.archived-btn:hover {
+  background: rgba(255,255,255,0.98);
+  transform: translateY(-1px);
+}
+
+.archived-btn i {
+  font-size: 14px;
+  color: #111;
+  margin-right: 6px;
+}
+
+.archived-btn .archived-count {
+  background-color: #2699f7f0;
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 0 5px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
+
+/* MAIN */
+.main{
+  flex:1 1 auto;
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:14px;
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+  height:100vh;
+  overflow:hidden;
+}
+
+.tasks-area {
+  flex:1;
+  overflow-y:auto;
+}
+
+/* Scroll de tareas oculto hasta scroll activo */
+.tasks-area::-webkit-scrollbar {
+  width: 6px;
+}
+.tasks-area::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.3);
+  border-radius: 10px;
+  visibility: hidden;
+  transition: visibility 0.3s;
+}
+.tasks-area.scrolling::-webkit-scrollbar-thumb {
+  visibility: visible;
+}
+.tasks-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* BOTONES */
 #add-list-btn{
   background:var(--accent);
   color:white;
@@ -102,7 +221,7 @@ body{
   cursor:pointer;
   transition:background .12s, transform .08s;
   font-size: var(--font-sm);
-  position: relative; /* para que emoji picker se posicione correctamente */
+  position: relative;
 }
 
 .list-item:hover{ background:#f3f4f6; }
@@ -114,7 +233,7 @@ body{
 
 /* ---------- CORRECCIÓN EMOJI ---------- */
 .list-select{
-  pointer-events: auto; /* ¡ahora sí recibe clicks! */
+  pointer-events: auto;
   width: 30px;
   height: 30px;
   display: inline-flex;
@@ -124,7 +243,7 @@ body{
   font-size: 18px;
   background: none;
   border: none;
-  z-index: 10; /* aseguramos que esté por encima del fondo */
+  z-index: 10;
 }
 
 .list-name{ flex:1; font-size: var(--font-sm); color:#111827; }
@@ -137,16 +256,6 @@ body{
 }
 
 /* MAIN */
-.main{
-  flex:1 1 auto;
-  background:var(--card);
-  border-radius:var(--radius);
-  padding:14px;
-  box-shadow:var(--shadow);
-  display:flex;
-  flex-direction:column;
-}
-
 .main-header{
   display:flex;
   gap:6px;
@@ -260,7 +369,7 @@ body{
 }
 
 .task-item.completed {
-  background-color: rgba(127, 255, 212, 0.138); /* verde agua */
+  background-color: rgba(127, 255, 212, 0.138);
 }
 
 .archived-container {
@@ -297,86 +406,24 @@ body{
 #archived-tasks .list-item {
   padding: 4px 6px;
   font-size: 12px;
-  background: #f3f4f6;
+  background: rgba(243,244,246,0.95);
+  backdrop-filter: blur(4px);
   border-radius: 6px;
   cursor: default;
 }
 
-/* Botón Tareas Archivadas */
-.archived-btn {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 6px;
-  padding: 6px 10px;
-  border-radius: 6px;
-  background: linear-gradient(90deg, rgba(255, 254, 247, 0.537), rgba(255, 255, 255, 0.024));
-  border: 1px solid rgba(2, 8, 6, 0.2);
-  cursor: pointer;
-  font-size: var(--font-sm);
-  color: #1077ff;
-  margin-top: 10px;
-  transition: all 0.2s ease;
-  position: relative; /* asegurar que picker aparezca sobre este */
-  z-index: 5;
-}
-
-.archived-btn:hover {
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
-  transform: translateY(-1px);
-}
-
-.archived-btn i {
-  font-size: 14px;
-  color: #111;
-  margin-right: 6px;
-}
-
-.archived-btn .archived-count {
-  background-color: #000000f0;
-  color: white;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 0 5px;
-  border-radius: 10px;
-  min-width: 18px;
-  text-align: center;
-}
-
-#empty-state {
-  margin-top: 20px;
-  text-align: center;
-  display: none;
-  font-size: 13px;
-  color: var(--muted);
-}
-
-#empty-state img {
-  max-width: 200px;
-  opacity: 0.9;
-  display: block;
-  margin: 0 auto 8px auto;
-}
-
-#empty-state .empty-message {
-  margin-top: 4px;
-  font-size: 14px;
-  color: #6b7280;
-  display: block;
-}
-
 /* ---------- Emoji Picker Cuadrado ---------- */
 .emoji-picker {
-  position: absolute;
-  background: #fff;
+  position: absolute;                       /* fuera de cualquier contenedor */
+  background: rgba(255, 255, 255, 0.97);   /* ligero difuminado */
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 6px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  z-index: 9999;
-  max-height: 300px;          /* altura máxima */
-  overflow-y: auto;           /* scroll si hay muchos emojis */
-  width: 240px;               /* ancho fijo */
+  z-index: 9999;                            /* siempre encima de todo */
+  max-height: 300px;
+  overflow-y: auto;
+  width: 240px;
 }
 
 .emoji-picker .category-title {
@@ -388,7 +435,7 @@ body{
 
 .emoji-picker .emoji-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr); /* 5 columnas */
+  grid-template-columns: repeat(5, 1fr);
   gap: 4px;
   margin-bottom: 6px;
 }
@@ -415,9 +462,6 @@ body{
 .dragging {
   opacity: 0;
 }
-
-
-
 
 /* responsive */
 @media (max-width:900px){
