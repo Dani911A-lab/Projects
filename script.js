@@ -40,7 +40,7 @@ function findList(id) {
 
 const emojiCategories = {
   "Oficina": ["👨‍💼","👩‍💼","🧑‍💼","👥","🔒","⭐","🚨","🏢","💼","📁","📂","🗂️","📊","📈","📉","📝","✒️","🧾","📚","📌","📎"],
-  "Agrícola": ["🌱","🌿","🌾","🌻","🍌","🍎","🍐","🍇","🍒","🥦","🌽","🌳","🌴","🐄","🐖","🐓","🐑","💧","🛠️","🏚️"],
+  "Agrícola": ["🌱","🌿","🌾","🌻","🍌","🌽","🐄","🐖","🐓","🐑","💧","🛠️","🏚️"],
   "Finanzas": ["🏚️","💰","💵","💳","💸","🪙","📦","⚖️","🧮"],
   "Logística": ["🚛","🚜","✈️","⛽","🛢️","💡"]
 };
@@ -53,6 +53,7 @@ function showEmojiPicker(btn, list) {
   const picker = document.createElement("div");
   picker.className = "emoji-picker";
 
+  // agregar categorías y emojis
   for (const [category, emojis] of Object.entries(emojiCategories)) {
     const title = document.createElement("div");
     title.textContent = category;
@@ -79,9 +80,11 @@ function showEmojiPicker(btn, list) {
     picker.appendChild(grid);
   }
 
+  // 🔹 clave: append a body
   document.body.appendChild(picker);
   activePicker = picker;
 
+  // posicionar el picker justo debajo del botón
   const rect = btn.getBoundingClientRect();
   picker.style.top = rect.bottom + window.scrollY + "px";
   picker.style.left = rect.left + window.scrollX + "px";
@@ -98,6 +101,8 @@ function showEmojiPicker(btn, list) {
     }
   }
 }
+
+
 
 /* ---------- Render ---------- */
 const listContainer = document.getElementById('list-container');
