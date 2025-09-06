@@ -53,7 +53,6 @@ function showEmojiPicker(btn, list) {
   const picker = document.createElement("div");
   picker.className = "emoji-picker";
 
-  // agregar categorías y emojis
   for (const [category, emojis] of Object.entries(emojiCategories)) {
     const title = document.createElement("div");
     title.textContent = category;
@@ -80,11 +79,10 @@ function showEmojiPicker(btn, list) {
     picker.appendChild(grid);
   }
 
-  // 🔹 clave: append a body
+  // 🔹 Agregar siempre al body para evitar clipping
   document.body.appendChild(picker);
   activePicker = picker;
 
-  // posicionar el picker justo debajo del botón
   const rect = btn.getBoundingClientRect();
   picker.style.top = rect.bottom + window.scrollY + "px";
   picker.style.left = rect.left + window.scrollX + "px";
@@ -103,7 +101,6 @@ function showEmojiPicker(btn, list) {
 }
 
 
-
 /* ---------- Render ---------- */
 const listContainer = document.getElementById('list-container');
 const currentListTitle = document.getElementById('current-list-title');
@@ -117,6 +114,34 @@ const clearCompletedBtn = document.getElementById('clear-completed');
 const listTpl = document.getElementById('list-item-tpl');
 const taskTpl = document.getElementById('task-item-tpl');
 
+/* ---------- Botón Tareas Archivadas ---------- */
+function renderArchivedButton() {
+  const sidebarFooter = document.querySelector('.sidebar-footer');
+  if (!sidebarFooter) return;
+
+  // Seleccionamos el botón existente o lo creamos si no existe
+  let archivedBtn = sidebarFooter.querySelector('.archived-btn');
+  if (!archivedBtn) {
+    archivedBtn = document.createElement('button');
+    archivedBtn.className = 'archived-btn';
+    archivedBtn.type = 'button';
+    sidebarFooter.appendChild(archivedBtn);
+  }
+
+  // ✅ Agregar click listener (solo una vez)
+  archivedBtn.onclick = () => {
+    state.viewingArchived = true;
+    render();
+  };
+
+ archivedBtn.innerHTML = `
+  <i class="fa fa-archive"></i> 
+  Tareas Archivadas 
+  <span class="archived-count">${state.archived.length}</span>
+`;
+}
+
+/* ---------- Renderizar listas ---------- */
 function renderLists() {
   listContainer.innerHTML = '';
 
@@ -128,7 +153,6 @@ function renderLists() {
     const nameSpan = node.querySelector('.list-name');
 
     emojiBtn.textContent = list.emoji || '📌';
-
     emojiBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       e.preventDefault();
@@ -141,7 +165,7 @@ function renderLists() {
     node.addEventListener('click', (e) => {
       if (e.target === renameBtn || e.target === deleteBtn || e.target === emojiBtn) return;
       state.currentListId = list.id;
-      state.viewingArchived = false;
+      state.viewingArchived = false; // volver a lista normal
       saveState();
       render();
     });
@@ -168,16 +192,11 @@ function renderLists() {
     listContainer.appendChild(node);
   });
 
-  const archivedBtn = document.createElement('button');
-  archivedBtn.className = 'archived-btn';
-  archivedBtn.innerHTML = `<i class="fa-regular fa-folder"></i> Tareas Archivadas <span class="archived-count">${state.archived.length}</span>`;
-  archivedBtn.addEventListener('click', () => {
-    state.viewingArchived = true;
-    render();
-  });
-  listContainer.appendChild(archivedBtn);
+  // Renderiza botón de archivadas siempre al final
+  renderArchivedButton();
 }
 
+/* ---------- Renderizar tareas ---------- */
 function renderTasks() {
   tasksEl.innerHTML = '';
 
@@ -204,7 +223,7 @@ function renderTasks() {
     emptyStateEl.style.display = 'block';
     if (!isArchived) {
       emptyStateEl.innerHTML = `
-        <img src="newproject.png" alt="Nueva lista" style="width:120px; display:block; margin:0 auto;">
+        <img src="newproject.png" alt="Nueva lista" style="width:300px; display:block; margin:0 auto;">
         <span class="empty-message">Empecemos un nuevo proyecto ✨</span>
       `;
     } else {
@@ -219,11 +238,11 @@ function renderTasks() {
     tasksEl.appendChild(node);
   });
 
-  // ✅ Activar drag & drop suave aquí
   if (!isArchived) {
     enableDragAndDrop();
   }
 }
+
 
 function buildTaskNode(task, list, isSubtask) {
   const node = taskTpl.content.firstElementChild.cloneNode(true);
