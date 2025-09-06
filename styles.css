@@ -14,38 +14,61 @@
 }
 
 *{box-sizing:border-box}
-html,body,#root{height:100%}
-body{
-  margin:0;
-  padding: 0;
+html, body {
   height: 100%;
-  width: 100%;
-  overflow: hidden;
-  background: linear-gradient(180deg,#fbfbfb 0%, #ffffff 100%);
-  color:#111827;
-  font-size: var(--font-md);
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: url("FONDO.jpg") no-repeat center center;
+  background-size: cover;   /* hace que el fondo cubra toda la pantalla */
 }
+
+.app-container {
+  width: 95vw;
+  height: 95vh;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 24px;
+
+  /* Fondo translúcido */
+  background: rgba(255, 255, 255, 0.424);
+
+  /* Borde vidrioso */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  /* Brillo en los bordes (efecto vidrio pulido) */
+  box-shadow: 
+    inset 1px 1px 2px rgba(255,255,255,0.6),   /* brillo arriba/izq */
+    inset -1px -1px 2px rgba(0,0,0,0.25),     /* sombra abajo/der */
+    0 4px 20px rgba(0,0,0,0.2);               /* sombra externa */
+  
+  /* Opcional: degrade suave interno */
+  background-image: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(255, 255, 255, 0.04)
+  );
+}
+
 
 .app {
   display: flex;
-  flex-direction: row;
-  height: 100%;
-  width: 100%;
-  height: 100vh;
+  gap: 10px;
+  width: 100%;           /* ahora ocupa todo el ancho del contenedor */
+  height: 100%;          /* ocupa toda la altura del contenedor */
 }
 
 /* SIDEBAR */
-.sidebar{
-  width:220px;
-  background:var(--card);
-  border-radius:var(--radius);
-  padding:14px;
-  box-shadow:var(--shadow);
-  display:flex;
-  flex-direction:column;
+.sidebar {
+  display: flex;
+  flex-direction: column;
   height: 100%;
+  padding: 1px;
+  gap: 10px;
 }
 
 .brand h1{
@@ -60,20 +83,37 @@ body{
   display: block;
 }
 
-/* Header listas con fondo difuminado */
-.lists-header {
+.sidebar-footer {
+  flex: 0 0 auto;        /* siempre al final del sidebar */
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
   gap: 6px;
-  background: rgba(255, 255, 255, 0.89); /* 🔹 fondo difuminado */
-  margin-bottom: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+#archived-tasks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Header listas con fondo difuminado */
+
+.lists-header {
+  flex: 0 0 auto;        /* altura natural */
+  display: flex;
+  justify-content: space-between; /* botón + en la misma línea */
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  background-color: #f6f7fb00;
   position: sticky;
   top: 0;
-  z-index: 100;
-  padding: 6px 0;
-  backdrop-filter: blur(4px); /* efecto difuminado */
-  border-bottom: 1px solid #e6e9ef; /* opcional, separación */
+  z-index: 10;
 }
 
 .list-item .list-select {
@@ -81,10 +121,10 @@ body{
 }
 
 .lists-wrapper {
-  flex:1;
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;        /* ocupa todo el espacio disponible */
+  overflow: hidden;       /* evita que se desborde */
 }
 
 .lists {
@@ -112,31 +152,28 @@ body{
   background: transparent;
 }
 
+
 /* Anclar botón de tareas archivadas abajo con fondo difuminado */
 .archived-btn {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 6px;
-  padding: 6px 10px;
-  border-radius: 6px;
-  background: rgba(255,255,255,0.95);
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(2, 8, 6, 0.2);
+  width: 100%;
+  padding: 8px 12px;      /* Ajusta la altura interna */
+  margin-bottom: 4px;     /* Lo acerca al borde inferior */
+  background-color: #29559035; /* Color del botón */
+  color: rgb(83, 65, 65);
+  border: none;
+  border-radius: 4px;     /* Bordes suaves */
   cursor: pointer;
-  font-size: var(--font-sm);
-  color: #1077ff;
-  margin-top: 10px;
-  transition: all 0.2s ease;
-  position: sticky;
-  bottom: 0;
-  z-index: 5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
 }
 
 .archived-btn:hover {
-  background: rgba(255,255,255,0.98);
-  transform: translateY(-1px);
+  background-color: #003c9150; /* Color al pasar el mouse */
 }
+
 
 .archived-btn i {
   font-size: 14px;
@@ -156,23 +193,33 @@ body{
 }
 
 /* MAIN */
-.main{
-  flex:1 1 auto;
-  background:var(--card);
-  border-radius:var(--radius);
-  padding:14px;
-  box-shadow:var(--shadow);
-  display:flex;
-  flex-direction:column;
-  height:100vh;
-  overflow:hidden;
+.main {
+  flex: 1 1 auto;         /* ocupa todo el espacio restante */
+  height: 100%;           /* ocupa toda la altura de .app */
+  background: rgba(255, 255, 255, 0.513);
+   backdrop-filter: blur(10px);
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(15, 21, 48, 0.178);
+}
+
+.tasks {
+  flex: 1;                   /* ocupa el espacio restante */
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .tasks-area {
-  flex:1;
-  overflow-y:auto;
+  display: flex;
+  flex-direction: column;
+  flex: 1;                   /* ocupa todo el espacio disponible */
+  position: relative;
 }
-
 /* Scroll de tareas oculto hasta scroll activo */
 .tasks-area::-webkit-scrollbar {
   width: 6px;
@@ -192,24 +239,36 @@ body{
 
 /* BOTONES */
 #add-list-btn{
-  background:var(--accent);
+  background: rgb(53, 164, 243);
   color:white;
   border:none;
   height:28px;
   width:28px;
-  border-radius:6px;
+  border-radius:20px;
   cursor:pointer;
   font-size:16px;
 }
 
-.list-container{
-  list-style:none;
-  padding:0;
-  margin:0;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  position: relative;
+
+.lists-container {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE y Edge */
+  margin-top: 6px;
+   padding-top: 4px;
+}
+
+.lists-container::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+.list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0;
+  margin: 0;
 }
 
 .list-item{
@@ -224,11 +283,11 @@ body{
   position: relative;
 }
 
-.list-item:hover{ background:#f3f4f6; }
+.list-item:hover{ background:#fefefe6a; }
 
 .list-item.active{
-  background:linear-gradient(90deg, rgba(217, 223, 232, 0.355), rgba(26,115,232,0.03));
-  box-shadow: inset 0 0 0 1px rgba(26,115,232,0.06);
+  background:linear-gradient(90deg, rgb(248, 248, 248), rgb(255, 255, 255));
+  box-shadow: inset 0 0 0 1px rgba(26, 115, 232, 0.095);
 }
 
 /* ---------- CORRECCIÓN EMOJI ---------- */
@@ -301,10 +360,10 @@ body{
   align-items:center;
   gap:10px;
   padding:8px;
-  border-radius:6px;
+  border-radius:12px;
   border:1px solid #cecfd2;
-  background:linear-gradient(180deg,#fff 0%, #fafcff 100%);
-  box-shadow: 0 2px 4px rgba(15, 21, 48, 0.03);
+  background:linear-gradient(180deg,#ffffffc2 0%, #ececedab 100%);
+  box-shadow: 0 2px 4px rgba(15, 21, 48, 0.178);
   font-size: var(--font-sm);
 }
 
@@ -337,14 +396,18 @@ body{
   font-size: var(--font-sm);
 }
 
-/* empty state */
-.empty-state{
-  margin-top:20px;
-  color:var(--muted);
-  text-align:center;
-  display:none;
-  font-size: var(--font-sm);
+/* empty state ocupa todo el contenedor */
+#empty-state {
+  font-size: 20px;
+  display: none;           /* se activa con JS */
+  flex-direction: column;  /* apila imagen y texto */
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  color: var(--muted);
+  text-align: center;
 }
+
 
 .subtasks {
   list-style: none;
@@ -369,7 +432,7 @@ body{
 }
 
 .task-item.completed {
-  background-color: rgba(127, 255, 212, 0.138);
+  background-color: rgba(60, 243, 69, 0.389);
 }
 
 .archived-container {
@@ -406,7 +469,7 @@ body{
 #archived-tasks .list-item {
   padding: 4px 6px;
   font-size: 12px;
-  background: rgba(243,244,246,0.95);
+  background: rgba(43, 94, 196, 0.202);
   backdrop-filter: blur(4px);
   border-radius: 6px;
   cursor: default;
@@ -469,3 +532,5 @@ body{
   .sidebar{ width:100%; order:2 }
   .main{ order:1 }
 }
+
+
