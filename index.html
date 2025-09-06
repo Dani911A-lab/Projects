@@ -8,58 +8,71 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
 <body>
-  <div class="app">
-    <aside class="sidebar">
-      <header class="brand">
-        <img src="LOGO5.png" alt="Logo" class="logo">
-      </header>
+  <div class="app-container">
+    <div class="app">
+      <!-- SIDEBAR IZQUIERDO -->
+      <aside class="sidebar">
+  <!-- Branding -->
+  <header class="brand">
+    <img src="LOGO1.png" alt="Logo" class="logo">
+  </header>
 
-      <div class="lists">
-        <div class="lists-header">
-          <h2>Listas</h2>
-          <button id="add-list-btn" title="Nueva lista">+</button>
-        </div>
-        <ul id="list-container" class="list-container"></ul>
+  <!-- Contenedor de listas -->
+  <div class="lists-wrapper">
+    <!-- Header de listas -->
+    <div class="lists-header">
+      <h2>Listas</h2>
+      <button id="add-list-btn" title="Nueva lista">+</button>
+    </div>
 
-        <!-- Contenedor de tareas archivadas (el botón se generará desde JS) -->
-        <div class="archived-container">
-          <ul id="archived-tasks"></ul>
-        </div>
-      </div>
-
-      <footer class="sidebar-footer">
-        <small>Desarrollado por Daniel Carandana</small>
-      </footer>
-    </aside>
-
-    <main class="main">
-      <div class="main-header">
-        <input id="task-input" type="text" placeholder="Agregar tarea..." />
-        <button id="add-task-btn">Agregar</button>
-      </div>
-
-      <section class="tasks-area">
-        <div class="tasks-header">
-          <h2 id="current-list-title">Selecciona una lista</h2>
-          <div class="tasks-controls">
-            <button id="clear-completed">Borrar completadas</button>
-          </div>
-        </div>
-
-        <ul id="tasks" class="tasks"></ul>
-
-        <div id="empty-state" class="empty-state">
-          <img id="empty-image" src="img/newproject.png" alt="Nueva lista" />
-          <span class="empty-message">Empecemos un nuevo proyecto ✨</span>
-        </div>
-      </section>
-    </main>
+    <!-- Contenedor scrollable de listas -->
+    <div class="lists-container">
+      <ul id="list-container" class="list-container"></ul>
+    </div>
   </div>
 
-  <!-- Template de lista -->
+  <!-- Footer de tareas archivadas, fuera de lists-wrapper -->
+  <footer class="sidebar-footer">
+    <ul id="archived-tasks"></ul>
+    <button class="archived-btn">
+      <i class="fa fa-archive"></i> Tareas archivadas
+      <span class="archived-count">0</span>
+    </button>
+  </footer>
+</aside>
+
+      <!-- MAIN DERECHO -->
+      <main class="main">
+        <div class="main-header">
+          <input id="task-input" type="text" placeholder="Agregar tarea..." />
+          <button id="add-task-btn">Agregar</button>
+        </div>
+
+        <section class="tasks-area">
+          <div class="tasks-header">
+            <h2 id="current-list-title">Selecciona una lista</h2>
+            <div class="tasks-controls">
+              <button id="clear-completed">Borrar completadas</button>
+            </div>
+          </div>
+
+          <ul id="tasks" class="tasks"></ul>
+
+          <div id="empty-state" class="empty-state">
+  <img id="empty-image" src="img/newproject.png" alt="Nueva lista" />
+  <span class="empty-message">Empecemos un nuevo proyecto ✨</span>
+</div>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+
+
+  <!-- Templates -->
   <template id="list-item-tpl">
     <li class="list-item">
-      <button class="list-select" type="button"></button> <!-- aquí irá el emoji -->
+      <button class="list-select" type="button"></button>
       <span class="list-name"></span>
       <div class="list-actions">
         <button class="rename-list" title="Renombrar">✎</button>
@@ -68,7 +81,6 @@
     </li>
   </template>
 
-  <!-- Template de tarea -->
   <template id="task-item-tpl">
     <li class="task-item" draggable="true" data-task-id="">
       <label class="checkbox">
@@ -83,11 +95,7 @@
     </li>
   </template>
 
-  <!-- Contenedor global del Emoji Picker -->
-  <div id="emoji-picker-container" class="emoji-picker"></div>
-
-  <!-- Script principal -->
-   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
