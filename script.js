@@ -436,6 +436,70 @@ function enableDragAndDrop() {
   });
 }
 
+/* ---------- Context Menu Personalizado ---------- */
+let customMenu = null;
+document.addEventListener("contextmenu", (e) => {
+  e.preventDefault(); // 🔹 Bloquear menú nativo
+
+  const taskItem = e.target.closest(".task-item");
+  if (!taskItem) {
+    if (customMenu) customMenu.remove();
+    return;
+  }
+
+  if (customMenu) customMenu.remove();
+
+  customMenu = document.createElement("div");
+  customMenu.className = "custom-context-menu";
+  customMenu.innerHTML = `<div class="menu-item">⿻ Duplicar tarea.</div>`;
+
+  document.body.appendChild(customMenu);
+
+  customMenu.style.top = e.pageY + "px";
+  customMenu.style.left = e.pageX + "px";
+
+  // Acción duplicar
+  customMenu.querySelector(".menu-item").addEventListener("click", () => {
+    const taskId = taskItem.dataset.taskId;
+    duplicateTask(taskId);
+    customMenu.remove();
+    customMenu = null;
+  });
+});
+
+// Ocultar menú al hacer click fuera
+document.addEventListener("click", () => {
+  if (customMenu) {
+    customMenu.remove();
+    customMenu = null;
+  }
+});
+
+/* ---------- Función duplicar ---------- */
+function duplicateTask(taskId) {
+  const list = findList(state.currentListId);
+  if (!list) return;
+
+  const original = list.tasks.find(t => t.id === taskId);
+  if (!original) return;
+
+  function deepCloneTask(task) {
+    return {
+      id: genId("t"),
+      text: task.text,
+      done: false, // las copias siempre arrancan sin completar
+      listId: task.listId,
+      subtasks: (task.subtasks || []).map(st => deepCloneTask(st))
+    };
+  }
+
+  const copy = deepCloneTask(original);
+  list.tasks.unshift(copy);
+  saveState();
+  render();
+}
+
+
 /* ---------- Inicializar ---------- */
 loadState();
 render();
