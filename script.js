@@ -255,16 +255,72 @@ function buildTaskNode(task, list, isSubtask) {
   subBtn.textContent = "➕";
   subBtn.title = "Agregar sub-tarea";
   subBtn.classList.add("subtask-btn");
-  node.querySelector(".task-actions").prepend(subBtn);
+
+  const calendarBtn = document.createElement("button");
+  calendarBtn.innerHTML = "📅";
+  calendarBtn.title = "Asignar fecha";
+  calendarBtn.classList.add("calendar-btn");
+
+  // Insertamos botones en orden: +, editar, calendario, eliminar
+  const actions = node.querySelector(".task-actions");
+  actions.innerHTML = ""; // Limpiamos por seguridad
+  actions.appendChild(subBtn);
+  actions.appendChild(editBtn);
+  actions.appendChild(calendarBtn);
+  actions.appendChild(deleteBtn);
 
   content.textContent = task.text;
   node.dataset.taskId = task.id;
 
-  if (task.done) {
-    checkbox.checked = true;
-    content.classList.add('completed');
-    node.classList.add("completed");
+  // Badge de fecha
+  function updateDateBadge() {
+  let badge = node.querySelector(".task-date-badge");
+  if (!task.dueDate) {
+    if (badge) badge.remove();
+    return;
   }
+  if (!badge) {
+    badge = document.createElement("span");
+    badge.className = "task-date-badge";
+    badge.style.fontSize = "11px";
+    badge.style.padding = "2px 6px";
+    badge.style.marginLeft = "8px";
+    badge.style.borderRadius = "6px";
+    badge.style.fontWeight = "bold";
+    badge.style.boxShadow = "inset 0 0 4px rgba(0,0,0,0.1)";
+    badge.style.backdropFilter = "blur(2px)";
+    actions.insertBefore(badge, deleteBtn); // lo ponemos antes del botón eliminar
+  }
+
+  badge.textContent = task.dueDate;
+
+  const today = new Date();
+  const due = new Date(task.dueDate);
+  const diffDays = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
+
+  if (diffDays > 5) {
+    badge.style.backgroundColor = "#4CAF50"; // verde
+    badge.style.color = "#fff";
+  } else if (diffDays >= 3) {
+    badge.style.backgroundColor = "#FFC107"; // amarillo pastel
+    badge.style.color = "#222";              // texto oscuro
+  } else if (diffDays >= 1) {
+    badge.style.backgroundColor = "#ef5800ff"; // naranja
+    badge.style.color = "#fff";
+  } else {
+    badge.style.backgroundColor = "#F44336"; // rojo
+    badge.style.color = "#fff";
+  }
+}
+
+if (task.dueDate) updateDateBadge();
+
+if (task.done) {
+  checkbox.checked = true;
+  content.classList.add('completed');
+  node.classList.add("completed");
+}
+
 
   checkbox.addEventListener('change', () => {
     task.done = checkbox.checked;
@@ -328,6 +384,26 @@ function buildTaskNode(task, list, isSubtask) {
     }
   });
 
+  calendarBtn.addEventListener("click", () => {
+    const currentDate = task.dueDate || "";
+    const dateInput = document.createElement("input");
+    dateInput.type = "date";
+    dateInput.value = currentDate;
+    dateInput.style.marginLeft = "6px";
+
+    actions.insertBefore(dateInput, deleteBtn);
+    dateInput.focus();
+
+    dateInput.addEventListener("change", () => {
+      task.dueDate = dateInput.value;
+      saveState();
+      updateDateBadge();
+      dateInput.remove();
+    });
+
+    dateInput.addEventListener("blur", () => dateInput.remove());
+  });
+
   if (task.subtasks && task.subtasks.length) {
     const ul = document.createElement("ul");
     ul.classList.add("subtasks");
@@ -341,6 +417,11 @@ function buildTaskNode(task, list, isSubtask) {
 
   return node;
 }
+
+
+
+
+
 
 function findParentTask(list, subtaskId) {
   function recurse(tasks) {
