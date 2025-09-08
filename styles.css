@@ -526,6 +526,27 @@ html, body {
   opacity: 0;
 }
 
+.custom-context-menu {
+  position: absolute;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 9999;
+  min-width: 160px;
+  font-size: 13px;
+}
+
+.custom-context-menu .menu-item {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.custom-context-menu .menu-item:hover {
+  background: #f3f4f6;
+}
+
+
 /* responsive */
 @media (max-width:900px){
   .app{ padding:10px; flex-direction:column; }
