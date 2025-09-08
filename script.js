@@ -275,10 +275,15 @@ function buildTaskNode(task, list, isSubtask) {
   // Badge de fecha
   function updateDateBadge() {
   let badge = node.querySelector(".task-date-badge");
+  let bubble = node.querySelector(".task-date-bubble");
+  let dateText = node.querySelector(".task-date-text");
+
   if (!task.dueDate) {
     if (badge) badge.remove();
     return;
   }
+
+  // Crear badge si no existe
   if (!badge) {
     badge = document.createElement("span");
     badge.className = "task-date-badge";
@@ -287,29 +292,68 @@ function buildTaskNode(task, list, isSubtask) {
     badge.style.marginLeft = "8px";
     badge.style.borderRadius = "6px";
     badge.style.fontWeight = "bold";
+    badge.style.position = "relative"; // importante para ubicar la burbuja
+    badge.style.display = "inline-block";
     badge.style.boxShadow = "inset 0 0 4px rgba(0,0,0,0.1)";
     badge.style.backdropFilter = "blur(2px)";
-    actions.insertBefore(badge, deleteBtn); // lo ponemos antes del botón eliminar
+    actions.insertBefore(badge, deleteBtn);
+
+    // Contenedor de texto de la fecha
+    dateText = document.createElement("span");
+    dateText.className = "task-date-text";
+    badge.appendChild(dateText);
+
+    // Burbuja
+    bubble = document.createElement("span");
+    bubble.className = "task-date-bubble";
+    bubble.style.position = "absolute";
+    bubble.style.top = "-10px";
+    bubble.style.right = "-10px";
+    bubble.style.width = "18px";
+    bubble.style.height = "18px";
+    bubble.style.borderRadius = "50%";
+    bubble.style.fontSize = "10px";
+    bubble.style.fontWeight = "bold";
+    bubble.style.display = "flex";
+    bubble.style.alignItems = "center";
+    bubble.style.justifyContent = "center";
+    bubble.style.boxShadow = "0 1px 3px rgba(0,0,0,0.3)";
+    badge.appendChild(bubble);
   }
 
-  badge.textContent = task.dueDate;
+  // Texto de la fecha
+  if (dateText) {
+    dateText.textContent = task.dueDate;
+  }
 
+  // Calcular días restantes
   const today = new Date();
   const due = new Date(task.dueDate);
   const diffDays = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
 
+  bubble.textContent = diffDays >= 0 ? diffDays : "0";
+
+  // Colores según rango
   if (diffDays > 5) {
-    badge.style.backgroundColor = "#4CAF50"; // verde
+    badge.style.backgroundColor = "#4CAF50";
     badge.style.color = "#fff";
+    bubble.style.backgroundColor = "#ade4b0ff";
+    bubble.style.color = "#033e09ff";
   } else if (diffDays >= 3) {
-    badge.style.backgroundColor = "#FFC107"; // amarillo pastel
-    badge.style.color = "#222";              // texto oscuro
+    badge.style.backgroundColor = "#FFC107";
+    badge.style.color = "#222";
+    bubble.style.backgroundColor = "#f3d7a8ff";
+    bubble.style.color = "#855400ff";
   } else if (diffDays >= 1) {
-    badge.style.backgroundColor = "#ef5800ff"; // naranja
+    badge.style.backgroundColor = "#FF9800";
     badge.style.color = "#fff";
+    bubble.style.backgroundColor = "#ffb66dff";
+    bubble.style.color = "#cf5d00ff";
   } else {
-    badge.style.backgroundColor = "#F44336"; // rojo
+    badge.style.backgroundColor = "#ff3022ff";
     badge.style.color = "#fff";
+    bubble.style.backgroundColor = "#ffa5a5ff";
+    bubble.style.color = "#600000ff";
   }
 }
 
@@ -317,9 +361,11 @@ if (task.dueDate) updateDateBadge();
 
 if (task.done) {
   checkbox.checked = true;
-  content.classList.add('completed');
+  content.classList.add("completed");
   node.classList.add("completed");
 }
+
+
 
 
   checkbox.addEventListener('change', () => {
