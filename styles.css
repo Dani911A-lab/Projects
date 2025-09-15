@@ -21,7 +21,7 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: url("FONDO.jpg") no-repeat center center;
+  background: url("FONDOs.jpg") no-repeat center center;
   background-size: cover;   /* hace que el fondo cubra toda la pantalla */
 }
 
@@ -563,5 +563,6 @@ html, body {
   .sidebar{ width:100%; order:2 }
   .main{ order:1 }
 }
+
 
 
